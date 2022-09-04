@@ -86,9 +86,11 @@ def formatName(name):
 
 #Formats phone numbers
 def formatPhone(phone):
+    #Valid phone format
     if(re.match(r'\d{3}-\d{3}-\d{4}', phone)):
         return phone
     
+    #Formats number if it has the correct amount of digits
     if(re.match(r'\d{3}[,.-]?\d{3}[,.-]?\d{4}', phone)):
         formattedPhone = ""
         currentDigit = 0
@@ -106,6 +108,7 @@ def formatPhone(phone):
 
         return formattedPhone
     
+    #Prompts for a valid phone number
     else:
         validPhone = False
         while validPhone == False:
