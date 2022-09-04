@@ -44,7 +44,7 @@ def readLines(fileName):
             middleName = formatName(arr[2])
 
             #ID
-            id = formatID(arr[3])
+            id = formatID(arr[3].upper())
 
             #Phone
             phone = arr[4].replace(" ", "")
@@ -52,6 +52,7 @@ def readLines(fileName):
 
             p = Person(lastName, firstName, middleName, id, phone)
             
+            #Checks for duplicate ids
             if id in dataDict.keys():
                 print("\nError: Data contains duplicate id")
             else:
@@ -61,12 +62,15 @@ def readLines(fileName):
 
 #Formats all name types        
 def formatName(name):
+    #Default value for empty middle names
     if(name == ''):
         return 'X'
 
+    #Valid name
     if(re.match(r'^[A-Z][a-z0-9]*$', name)):
         return name
 
+    #Formats Name 
     formattedName = ""
     currentChar = 0
     for character in name:
@@ -80,6 +84,7 @@ def formatName(name):
 
     return formattedName
 
+#Formats phone numbers
 def formatPhone(phone):
     if(re.match(r'\d{3}-\d{3}-\d{4}', phone)):
         return phone
@@ -113,17 +118,11 @@ def formatPhone(phone):
         
         return phone
 
+#Formats ID
 def formatID(id):
+    #If the ID fits with the format
     if(re.match(r'^[A-Z]{2}[0-9]{4}$', id)):
         return id
-    
-    if(re.match(r'^[a-zA-Z]{2}[0-9]{4}$', id)):
-        formattedID = ""
-        for char in id:
-            if(re.match(r'\w', char)):
-                formattedID += char.upper()
-
-        return formattedID
     
     else:
         validID = False
