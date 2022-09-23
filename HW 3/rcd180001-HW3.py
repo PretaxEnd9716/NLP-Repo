@@ -19,7 +19,7 @@ def main():
 
     #Prints Out Lexical Diversity
     sets = set(tokens)
-    print("\nLexical Diversity: %.2f" % (len(sets) / len(tokens)))
+    print("\nLexical Diversity: %.2f\n" % (len(sets) / len(tokens)))
 
     #Preprocess Text
     tokens = preprocess(raw_text)
@@ -30,8 +30,40 @@ def main():
     #Gets the nouns and prints out the first 20 lemmas and their tags
     nouns = posTagging(uniqueLem)
     
-    print("Number of Tokens: %d " % len(tokens))
-    print("Number of Nouns: %d" % len(nouns))
+    print("\nNumber of Tokens: %d " % len(tokens))
+    print("Number of Nouns: %d\n" % len(nouns))
+
+    #Gets the nouns and their counts
+    nouns_dict = nounCount(nouns, tokens)
+
+    #Start the guessing game
+    guessingGame(nouns_dict)
+
+#Runs the guessing game
+def guessingGame(nouns_dict):
+    exit()
+
+#Makes a dictionary of the nouns and their counts 
+def nounCount(nouns, tokens):
+    nouns_dict = {}
+
+    #Get the counts for all the nouns
+    for t in tokens:
+        if t in nouns:
+            if t not in nouns_dict:
+                nouns_dict[t] = 1
+            else:
+                nouns_dict[t] += 1
+
+    #Sort the nouns    
+    sortedNouns = sorted(nouns_dict, key = nouns_dict.get, reverse=True)
+    
+    #Print the 50 most common nouns in the file
+    print("50 Most Common Nouns")
+    for noun in sortedNouns[:50]:
+        print(noun, " : ", nouns_dict[noun])
+
+    return nouns_dict
 
 #POS tagging and returns the nouns
 def posTagging(uniqueLem):
