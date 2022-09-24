@@ -2,11 +2,14 @@ from fileinput import filename
 import os
 import sys
 import re
+from this import d
 
 import nltk
 from nltk import word_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
+
+from random import randint
 
 def main():
     #Opens files
@@ -41,7 +44,86 @@ def main():
 
 #Runs the guessing game
 def guessingGame(nouns_dict):
+    
+    #Sorts Nouns
+    sortedNouns = sorted(nouns_dict, key = nouns_dict.get, reverse=True)[:50]
+
+    #Stores Score and the word they're guessing
+    score = 5
+    word = sortedNouns[randint(0, 49)]
+    correctLetters = getAllLetters(word)
+    letters = []
+    letter = ""
+
+    #Runs Game
+    print("Guessing Game")
+    while score > 0:
+        #Checks if the player finished the word
+        if len(correctLetters) == len(letters):
+            print("\nYou Solved It!\n")
+            letters = []
+            word = sortedNouns[randint(0,49)]
+            correctLetters = getAllLetters(word)
+
+        #Prints out currently guessed letters
+        correctGuess(letters, word)
+        print("\n")
+        
+        #Waits for a letter to be inputted
+        while True:
+            #Asks the user for a letter
+            letter = input("Guess a letter: ").lower()
+            
+            #Exit
+            if letter == '!':
+                print("Your Final Score: %d" % score)
+                print("Exiting Game")
+                exit()
+            #Checks if the input is a letter
+            elif re.match(r'[^.?!,:;()\-\n\d\s]', letter) and len(letter) == 1:
+                break
+            #Invalid Input
+            else:
+                print("Not a letter\n")
+                correctGuess(letters, word)
+                print("\n")
+        
+        
+        #Correct Letter
+        if letter in word:
+            letters.append(letter)
+            score += 1
+            print("Correct! Score is %d" % score)
+        #Wrong Letter
+        else:
+            score -= 1
+            print("Wrong! Score is %d" %score)
+    
+    print("You Lose!\nExiting Game")
     exit()
+
+#Gets all the letters in the word
+def getAllLetters(word):
+    correctLetters = []
+
+    #Go through each character in a word
+    for i in range(len(word)):
+        char = word[i]
+
+        #Checks if the letter has been encountered
+        if char not in correctLetters:
+            correctLetters.append(char)
+    
+    return correctLetters
+
+#Prints out all the correctly guessed letters
+def correctGuess(letters, word):
+    #Go through each letter
+    for i in range(0, len(word)):
+        if word[i] in letters:
+            print(word[i], end = " ")
+        else:
+            print("_", end = " ")
 
 #Makes a dictionary of the nouns and their counts 
 def nounCount(nouns, tokens):
