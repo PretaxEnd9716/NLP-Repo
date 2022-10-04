@@ -11,4 +11,7 @@
 
 ## [Assignment 4]( https://github.com/PretaxEnd9716/NLP-Repo/blob/main/HW%204/wordNet-rcd180001.pdf )
 
-## [Assignment 5](  )
+## Assignment 5
+[N-Gram Narrative]( https://github.com/PretaxEnd9716/NLP-Repo/blob/main/HW%205/N-Grams%20rcd180001.pdf )<br>
+[Language Model]( https://github.com/PretaxEnd9716/NLP-Repo/blob/main/HW%205/languageModel-rcd180001.py )<br>
+[Predict Languages]( https://github.com/PretaxEnd9716/NLP-Repo/blob/main/HW%205/predictLang-rcd180001.py )
