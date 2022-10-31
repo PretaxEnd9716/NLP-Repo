@@ -1,0 +1,6 @@
+Hi <name>, welcome to Board Game Bot!
+I'm here to give you board game recommendations!
+First, we need to gather some information
+What are your favorite board games!
+What are some board games you dislike?
+What kind of games do you want to play?

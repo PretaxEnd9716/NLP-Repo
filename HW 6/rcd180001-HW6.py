@@ -50,18 +50,24 @@ def main():
     print("10 johnson :", frequencies["johnson"])
 
     #Create knowledge base
-    facts = {"film":"Joseph Gordon-Levitt is in all his movies, either as a character or shows up in a cameo",
-    "director":"Rian Johnson was inspired to become a film director after seeing Annie Hall",
-    "looper":"The script was featured on the 2010 Blacklist; a list of the most liked unmade scripts of the year",
-    "jedi":"The Porgs species in the films were created because Puffins kept getting into the movie",
-    "knives":"Rian Johnson came up with the idea of Knives Out after making Brick",
-    "critics":"He is married to Karina Longworth, a movie writer and critic",
-    "september":"Looper was released on September",
-    "episode":"He directed 3 episodes of Breaking Bad, including Ozymandias",
-    "brick":"The film's use of language is inspired by Dashiell Hammett novels",
-    "johnson":"He is in a folk band with his brother Nathan Johnson"}
+    facts = {"film":["Joseph Gordon-Levitt is in all his movies, either as a character or shows up in a cameo", "He usually shoots in 35mm film"],
+    "director":["Rian Johnson was inspired to become a film director after seeing Annie Hall", "He directed a music video for the Mountain Goats after the band found out that they were referenced in Brick"],
+    "looper":["The script was featured on the 2010 Blacklist; a list of the most liked unmade scripts of the year", "Rian Johnson has been developing this movie since 2002"],
+    "jedi":["The Porgs species in the films were created because Puffins kept getting into the movie", "The movie was so well recieved in Lucasfilm, he was invited to direct a new trilogy for Star Wars"],
+    "knives":["Rian Johnson came up with the idea of Knives Out after making Brick", "The movie is based of of Agatha Christie mysteries"],
+    "critics":["He is married to Karina Longworth, a movie writer and critic", "He directed Ozymandias, and many critics said that it's one of the best episodes on television"],
+    "september":["Looper was released on September", "Knives Out was shown in September during TIFF"],
+    "episode":["He directed 3 episodes of Breaking Bad, including Ozymandias", "He wrote an episode for Joseph Gordon-Levitt's show HitRecord"],
+    "brick":["The film's use of language is inspired by Dashiell Hammett novels", "Cowboy Bebop influenced the movie"],
+    "johnson":["He is in a folk band with his brother Nathan Johnson", "He plays banjo and sings with his brother in their folk band"]}
 
+    #Pickle
     pickle.dump(facts, open('HW 6/Data/knowledgeBase.p', 'wb'))
+    knowledgeBase = pickle.load(open('HW 6/Data/knowledgeBase.p', 'rb'))
+    
+    print("\nFacts")
+    for key, value in knowledgeBase.items():
+        print(key, ": ", value)
 
 #Obtains relevant urls
 def webCrawler():
