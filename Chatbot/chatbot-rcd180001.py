@@ -12,6 +12,7 @@ def init():
     filepath = os.path.join(os.path.dirname(__file__), filename)
     if(os.path.exists(filepath)):
         #Open json file
+        #TODO: Clean up with a function
         userFile = open(filepath)
         userJSON = json.load(userFile)
         likedGames = userJSON["Liked Games"]
@@ -25,29 +26,16 @@ def init():
         favorite = ""
         newUser = True
 
-    #Obtain Game Files
-    gameFile = open(os.path.join(os.path.dirname(__file__), "Data/Games.json"))
-    gameJSON = json.load(gameFile)
-
-    #Loads intro topic
+    #Runs intro topic
     if(newUser):
-        topic = introTopic.newUserIntro(username)
+        newUser = introTopic.newUserIntro(username, likedGames, dislikedGames, favorite)
+        username = newUser[0]
+        likedGames = newUser[1]
+        dislikedGames = newUser[2]
+        favorite = newUser[3]
+        topic = 0
     else:
         topic = introTopic.oldUserIntro(username)
-
-
-
-def newUser(likedGames, dislikedGames, favorite, filepath):
-    newUser = {
-        "Liked Games": likedGames,
-        "Disliked Games": dislikedGames,
-        "Favorite Type": favorite
-    }
-    newJSON = json.dumps(newUser)
-        
-    #Create json file
-    with open(filepath, "w") as userFile:
-        userFile.write(newJSON)
 
 if __name__ == "__main__":
     init()

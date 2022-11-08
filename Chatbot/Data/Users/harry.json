@@ -1,5 +1,6 @@
 {
-    "Liked Games": ["Settlers of Catan", "Carcassonne", "Power Grid"],
-    "Disliked Games": ["Twilight Imperium", "Monopoly", "Risk"],
-    "Favorite Type": "Euro"
+    "Liked Games": ["settlers of catan", "carcassonne", "power grid"],
+    "Disliked Games": ["twilight imperium", "monopoly", "risk"],
+    "Favorite Type": "euro",
+    "Recommended Game": "decrypto"
 }
