@@ -61,7 +61,6 @@ def newUserIntro(username, likedGames, dislikedGames, favorite):
     dislikedGames = recognizeBoardGames(dislike)
 
     #Game types
-    #TODO: Change this to a contains the keyword
     euroType = nlp("Euro")
     themType = nlp("Thematic")
     warType = nlp("Wargame")
@@ -91,7 +90,6 @@ def newUserIntro(username, likedGames, dislikedGames, favorite):
     return username, likedGames, dislikedGames, favorite
 
 #Recognize Board Games
-#TODO: Get it working with games with 2 or more words
 def recognizeBoardGames(boardGameText):
     recognizedBoardGames = [] 
     
@@ -104,7 +102,5 @@ def recognizeBoardGames(boardGameText):
     for token in boardGameText:
         if(token not in recognizedBoardGames and (token.pos_ == "PROPN" or token.pos_ == "NOUN") and token.text in gameJSON):
             recognizedBoardGames.append(token)
-
-    #TODO: Make it search through the games and find if any are very similar to add on recognized board games. Make .75 the min similarity
 
     return recognizedBoardGames
