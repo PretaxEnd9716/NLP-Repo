@@ -3,57 +3,88 @@ import os
 
 import json
 
-import spacy
-from spacytextblob.spacytextblob import SpacyTextBlob
-
-#Load NLP
-nlp = spacy.load("en_core_web_lg")
-
-def obtainGame(username):
+def obtainGame(username, nlp):
     #Intro
     print(f"Board Game Bot: Let's talk about a new board game!")
     input(f"{username}: ")
 
     #Checks if there's a recommendation
-    userFileName = "Data/Users/" + username + ".json"
-    with open(os.path.join(os.path.direname(__file__), userFileName)) as userFile:
+    userFileName = "Data/Users/" + username.lower() + ".json"
+    with open(os.path.join(os.path.dirname(__file__), userFileName), "r") as userFile:
         userJSON = json.load(userFile)
 
     recommendAvailable = False
     if userJSON["Recommended Game"] != "":
         recommendAvailable = True
+        title = userJSON ["Recommended Game"]
         
     #Asks if they wanna talk about the most recently recommended game
     if recommendAvailable:
-        title = userJSON ["Recommended Game"]
-
-        print(f"Board Game Bot: Do you want to talk about my most recent recommendation {title}?")
+        print(f"Board Game Bot: Do you want to talk about my most recent recommendation: {title}?")
         recommend = input(f"{username}: ")
         recNLP = nlp(recommend)
 
-        #Asks for their review of the game
-        reviewGame(username, title)
+        yesNLP = recNLP.similarity(nlp("Yes"))
+        noNLP = recNLP.similarity(nlp("No"))
+        maxChoice = max(yesNLP, noNLP)
 
-        #Delete the recommended game
-        userJSON["Recommended Game"] = ""
-        with open(os.path.join(os.path.direname(__file__), userFileName)) as userFile:
-            json.dump(userJSON, userFile)
+        if(maxChoice == yesNLP):
+            like = reviewGame(username, nlp)
 
-    else:
-        #Asks for the the title of the game
+            likedGames = userJSON["Liked Games"]
+            dislikedGames = userJSON["Disliked Games"]
+                
+            if like:
+                likedGames.append(title)
+            else:
+                dislikedGames.append(title)
+
+            userJSON["Liked Games"] = likedGames
+            userJSON["Disliked Games"] = dislikedGames
+            userJSON["Recommended Game"] = ""
+
+            with open(os.path.join(os.path.dirname(__file__), userFileName), "w") as userFile:
+                json.dump(userJSON, userFile)
+
+            return None
+
+    #Asks for the the title of the game
+    title = "NONE"
+    while title == "NONE":
         print(f"Board Game Bot: What's the title of the board game?")
         title = input(f"{username}: ")
         nlpTitle = nlp(title)
         title = recognizeTitle(nlpTitle)
         
-        #Obtain game info
         if(title == "NONE"):
-            newGame(username, title)
-            
-        #Asks the user's opinion on the game
-        reviewGame(username, title)
+            print("Board Game Bot: I didn't get the name. Can you try again?")
+    
+    #Checks if the title is within knowledge base
+    with open(os.path.join(os.path.dirname(__file__), "Data/Games.json"), "r") as gameFile:
+        gameJSON = json.load(gameFile)
 
-def reviewGame(username, title):
+    if title not in gameJSON:
+        newGame(username, title, nlp)
+
+    #Asks the user's opinion on the game
+    like = reviewGame(username, nlp)
+
+    likedGames = userJSON["Liked Games"]
+    dislikedGames = userJSON["Disliked Games"]
+                
+    if like:
+        likedGames.append(title)
+    else:
+        dislikedGames.append(title)
+
+    userJSON["Liked Games"] = likedGames
+    userJSON["Disliked Games"] = dislikedGames
+
+    #Writes JSON
+    with open(os.path.join(os.path.dirname(__file__), userFileName), "w") as userFile:
+        json.dump(userJSON, userFile)
+
+def reviewGame(username, nlp):
     #Asks for the user's opinion on the game
     print("Board Game Bot: What are your opinions on the board game?")
     review = input(f"{username}: ")
@@ -61,25 +92,12 @@ def reviewGame(username, title):
 
     #Checks the polarity of the review
     like = False
-    if(reviewNLP.polarity > 0):
+    if(reviewNLP._.blob.polarity > 0):
         like = True
-    
-    #Edit the user json
-    userFileName = "Data/Users/" + username + ".json"
-    with open(os.path.join(os.path.direname(__file__), userFileName)) as userFile:
-        userJSON = json.load(userFile)
 
-    if like:
-        likedGames = userJSON["Liked Games"]
-        userJSON["Liked Games"] = likedGames.append(title)
-    else:
-        dislikedGames = userJSON["Disliked Games"]
-        userJSON["Disliked Games"] = dislikedGames.append(title)
-    
-    with open(os.path.join(os.path.direname(__file__), userFileName)) as userFile:
-        json.dump(userJSON, userFile)
+    return like
 
-def newGame(username, title):
+def newGame(username, title, nlp):
     #Asks for the game type
     print(f"Board Game Bot: What type of game is {title}?")
     userType = input(f"{username}: ")
@@ -95,68 +113,42 @@ def newGame(username, title):
 
     typeArr = [econNLP, euroNLP, themeNLP, warNLP, cardNLP, partyNLP]
     mostSimType = max(typeArr)
-
     if mostSimType == econNLP or mostSimType == euroNLP:
         gameType = "Euro"
     elif mostSimType == themeNLP:
         gameType = "Thematic"
     elif mostSimType == warNLP:
-        gameType = "Wargame"
+        gameType = "War"
     elif mostSimType == cardNLP:
-        gameType = "Card Game"
+        gameType = "Card"
     elif mostSimType == partyNLP:
-        gameType = "Party Game"
-
-    #Asks for the complexity of the game
-    print(f"Board Game Bot: How complex is {title}?")
-    userComplex = input(f"{username}: ")
-    ucNLP = nlp(userComplex)
-
-    #Checks the similarity for each complexity
-    lightNLP = ucNLP.similarity(nlp("This game is light complexity"))
-    medNLP = ucNLP.similarity(nlp("This game is medium complexity"))
-    heavyNLP = ucNLP.similarity(nlp("This game is heavy complexity"))
-
-    compArr = [lightNLP, medNLP, heavyNLP]
-    mostSimComp = max(compArr)
-
-    if mostSimComp == lightNLP:
-        complexity = "Light"
-    elif mostSimComp == medNLP:
-        complexity = "Medium"
-    elif mostSimComp == heavyNLP:
-        complexity = "Heavy"
+        gameType = "Party"
 
     #Edit game json
     newGameDict = { 
         title: 
         {
-            "Complexity": complexity,
             "Type": gameType
         }
     }
 
+    with open(os.path.join(os.path.dirname(__file__), "Data/Games.json"), "r") as gameFile:
+        gameJSON = json.load(gameFile)
+
+    gameJSON.update(newGameDict)
+
     with open(os.path.join(os.path.dirname(__file__), "Data/Games.json"), "w") as gameFile:
-        json.dump(newGameDict, gameFile)
+        json.dump(gameJSON, gameFile)
 
 #Checks if the board game is in the knowledge base
-#TODO: Use 'with' construct
 def recognizeTitle(boardGameText):
-    #Obtain Game Files
-    gameFile = open(os.path.join(os.path.dirname(__file__), "Data/Games.json"))
-    gameJSON = json.load(gameFile)
-
     #Go Through Entities
     for game in boardGameText.ents:
-        if game.text.lower() in gameJSON:
-            gameFile.close
-            return game
+        return game.text.lower()
     
     #Check each noun and proper noun if it's a game title
     for token in boardGameText:
-        if((token.pos_ == "PROPN" or token.pos_ == "NOUN") and token.text in gameJSON):
-            gameFile.close
-            return token.text
+        if((token.pos_ == "PROPN" or token.pos_ == "NOUN")):
+            return token.text.lower()
 
-    gameFile.close
     return "NONE"

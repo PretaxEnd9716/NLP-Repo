@@ -3,23 +3,17 @@ import os
 
 import json
 
-import spacy
-
-#Load NLP
-nlp = spacy.load("en_core_web_lg")
-
 #Obtain Game Files
 gameFile = open(os.path.join(os.path.dirname(__file__), "Data/Games.json"))
 gameJSON = json.load(gameFile)
 
-def oldUserIntro(username):
+def oldUserIntro(username, nlp):
     #Intro
     print(f"Board Game Bot: Welcome back {username}!")
     input(f"{username}: ")
 
     #Ask whether to recommend Do you want a board game recommendation or do you wanna talk about a new board game you've played
     while(True):
-        
         print(f"Board Game Bot: Do you want a board game recommendation or do you wanna talk about a new board game you've played?")
         newTopic = input(f"{username}: ")
         topic = nlp(newTopic.lower())
@@ -28,7 +22,7 @@ def oldUserIntro(username):
         recommend = nlp("I want a board game recommendation")
         recommendationSimilarity = recommend.similarity(topic)
 
-        info = nlp("I played a new board game")
+        info = nlp("I want to talk about a new board game")
         infoSimilarity = info.similarity(topic)
 
         if(recommendationSimilarity > infoSimilarity and recommendationSimilarity >= .75):
@@ -38,7 +32,7 @@ def oldUserIntro(username):
         else:
             print("Board Game Bot: I don't think I understood you")
 
-def newUserIntro(username, likedGames, dislikedGames, favorite):
+def newUserIntro(username, likedGames, dislikedGames, favorite, nlp):
     #Intro
     print(f"Board Game Bot: Hi {username}, welcome to Board Game Bot")
     input(f"{username}: ")
@@ -75,18 +69,16 @@ def newUserIntro(username, likedGames, dislikedGames, favorite):
     typeArr = [type.similarity(nlp("Euro")), type.similarity(nlp("Thematic")), type.similarity(nlp("Wargame")), type.similarity(nlp("Card Game")), type.similarity(nlp("Party Game"))]
     mostSimType = max(typeArr)
 
-    #TODO: Retype this to not use similarity function and use match
-    def switch(mostSimType):
-        if mostSimType == euroType.similarity(type):
-            favorite = "Euro"
-        elif mostSimType == themType.similarity(type):
-            favorite = "Thematic"
-        elif mostSimType == warType.similarity(type):
-            favorite = "Wargame"
-        elif mostSimType == cardType.similarity(type):
-            favorite = "Card Game"
-        elif mostSimType == partyType.similarity(type):
-            favorite = "Party Game"
+    if mostSimType == euroType.similarity(type):
+        favorite = "Euro"
+    elif mostSimType == themType.similarity(type):
+        favorite = "Thematic"
+    elif mostSimType == warType.similarity(type):
+        favorite = "Wargame"
+    elif mostSimType == cardType.similarity(type):
+        favorite = "Card"
+    elif mostSimType == partyType.similarity(type):
+        favorite = "Party"
 
     return username, likedGames, dislikedGames, favorite
 
@@ -95,13 +87,13 @@ def recognizeBoardGames(boardGameText):
     recognizedBoardGames = [] 
     
     #Entity recognition
-    #TODO: Switch to obtain text rather than entity
-    recognizedBoardGames = [game for game in boardGameText.ents if game.text.lower() in gameJSON]
+    recognizedBoardGames = [game.text.lower() for game in boardGameText.ents if game.text.lower() in gameJSON]
     
     #Checking each noun and checking whether they're in the board game knowledge base
-    #TODO: Clean up if statement and append in the text rather than the token
     for token in boardGameText:
-        if(token not in recognizedBoardGames and (token.pos_ == "PROPN" or token.pos_ == "NOUN") and token.text in gameJSON):
-            recognizedBoardGames.append(token)
+        tokenText = token.text.lower()
+        if tokenText not in recognizedBoardGames and tokenText in gameJSON:
+            if token.pos_ == "PROPN" or token.pos_ == "NOUN":
+                recognizedBoardGames.append(tokenText)
 
     return recognizedBoardGames
