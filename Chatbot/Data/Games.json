@@ -1,49 +1,41 @@
 {
     "settlers of catan":
     {
-        "Summary": "In Settlers of Catan, players try to be the dominant force on the island of Catan by building settlements, cities, and roads. On each turn dice are rolled to determine what resources the island produces.",
         "Complexity": "Light",
         "Type": "Euro"
     },
     "carcassonne":
     {
-        "Summary":"Carcassonne is a tile-placement game in which the players draw and place a tile with a piece of southern French landscape on it. The tile might feature a city, a road, a cloister, grassland or some combination thereof, and it must be placed adjacent to tiles that have already been played, in such a way that cities are connected to cities, roads to roads, etcetera. Having placed a tile, the player can then decide to place one of their meeples on one of the areas on it: on the city as a knight, on the road as a robber, on a cloister as a monk, or on the grass as a farmer. When that area is complete, that meeple scores points for its owner.",
         "Complexity": "Light",
         "Type": "Euro"
     },
     "power grid":
     {
-        "Summary":"The objective of Power Grid is to supply the most cities with power when someone's network gains a predetermined size. In this new edition, players mark pre-existing routes between cities for connection, and then bid against each other to purchase the power plants that they use to power their cities.",
         "Complexity": "Medium",
         "Type": "Euro"
     },
     "monopoly":
     {
-        "Summary":"Players take the part of land owners, attempting to buy and then develop their land. Income is gained by other players visiting their properties and money is spent when they visit properties belonging to other players.",
         "Complexity": "Light",
         "Type": "Thematic"
     },
     "twilight imperium":
     {
-        "Summary":"Twilight Imperium (Fourth Edition) is a game of galactic conquest in which three to six players take on the role of one of seventeen factions vying for galactic domination through military might, political maneuvering, and economic bargaining. Every faction offers a completely different play experience, from the wormhole-hopping Ghosts of Creuss to the Emirates of Hacan, masters of trade and economics. These seventeen races are offered many paths to victory, but only one may sit upon the throne of Mecatol Rex as the new masters of the galaxy.",
         "Complexity": "Heavy",
         "Type": "Thematic"
     },
     "risk":
     {
-        "Summary":"Take over the world in this game of strategy conquest, In the Risk game, the goal is simple: players aim to conquer their enemies’ territories by building an army, moving their troops in, and engaging in battle.",
         "Complexity": "Light",
         "Type": "Wargame"
     },
     "wingspan":
     {
-        "Summary":"You are bird enthusiasts—researchers, bird watchers, ornithologists, and collectors—seeking to discover and attract the best birds to your network of wildlife preserves.",
         "Complexity": "Medium",
         "Type": "Card Game"
     },
     "decrypto":
     {
-        "Summary":"Players compete in two teams in Decrypto, with each trying to correctly interpret the coded messages presented to them by their teammates while cracking the codes they intercept from the opposing team.",
         "Complexity": "Light",
         "Type": "Party Game"
     }

@@ -75,6 +75,7 @@ def newUserIntro(username, likedGames, dislikedGames, favorite):
     typeArr = [type.similarity(nlp("Euro")), type.similarity(nlp("Thematic")), type.similarity(nlp("Wargame")), type.similarity(nlp("Card Game")), type.similarity(nlp("Party Game"))]
     mostSimType = max(typeArr)
 
+    #TODO: Retype this to not use similarity function and use match
     def switch(mostSimType):
         if mostSimType == euroType.similarity(type):
             favorite = "Euro"
