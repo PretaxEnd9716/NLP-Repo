@@ -76,7 +76,7 @@ def findGame(type, userJSON):
         game = gameJSON[title]
         gameType = game["Type"]
     
-        if gameType.lower() == type:
+        if gameType.lower() == type.lower():
             if title not in likedGames and title not in dislikedGames:
                 return title
 
