@@ -14,6 +14,7 @@ def init():
     #Load NLP
     nlp = spacy.load("en_core_web_lg")
     nlp.add_pipe('spacytextblob')
+    nlp.add_pipe('merge_noun_chunks')
 
     #Obtain Username and userfile
     username = input("username: ")
@@ -63,7 +64,7 @@ def init():
             recommend.recommendGame(username, nlp)
         
     while True:
-        print(f"Board Game Bot: Do you want a board game recommendation, do you wanna talk about a new board game you've played, or do you want to leave?")
+        print(f"Board Game Bot: Do you want a board game recommendation or do you wanna talk about a new board game you've played? To exit, type \"exit\"")
         newTopic = input(f"{username}: ")
         topic = nlp(newTopic.lower())
 
@@ -74,17 +75,15 @@ def init():
         topicArr = [recommendTopic, infoTopic, leave]
         maxTopic = max(topicArr)
 
-        if(maxTopic == recommendTopic and recommendTopic >= .75):
+        if(newTopic.lower() == "exit"):
+            print("Board Game Bot: See you later!")
+            return None
+        elif(maxTopic == recommendTopic and recommendTopic >= .75):
             recommend.recommendGame(username, nlp)
         elif(maxTopic == infoTopic and infoTopic >= .75):
             info.obtainGame(username, nlp)
-        elif(maxTopic == leave and leave >= .75):
-            print(f"Board Game Bot: Goodbye {username}!")
-            return None
         else:
             print("Board Game Bot: I don't think I understood you")
-
-
 
 if __name__ == "__main__":
     init()

@@ -85,7 +85,7 @@ def newUserIntro(username, likedGames, dislikedGames, favorite, nlp):
 #Recognize Board Games
 def recognizeBoardGames(boardGameText):
     recognizedBoardGames = [] 
-    
+
     #Entity recognition
     recognizedBoardGames = [game.text.lower() for game in boardGameText.ents if game.text.lower() in gameJSON]
     
